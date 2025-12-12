@@ -24,3 +24,12 @@ export interface TextUploadProps {
   loading?: boolean;
   className?: string;
 }
+
+export interface UploadModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onFileUpload: (file: File) => Promise<void>;
+  onTextUpload: (content: string, filename: string) => Promise<void>;
+  loading?: boolean;
+  uploadProgress?: number; // 0-100
+}

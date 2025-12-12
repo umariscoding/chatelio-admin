@@ -72,19 +72,8 @@ const TextUpload: React.FC<TextUploadProps> = ({
 
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Header */}
-      <div className="text-center">
-        <Icons.Document className="mx-auto h-12 w-12 text-secondary-400" />
-        <h3 className="mt-4 text-lg font-medium text-secondary-100">
-          Add Text Content
-        </h3>
-        <p className="mt-1 text-sm text-secondary-300">
-          Paste or type your content directly to add it to your knowledge base.
-        </p>
-      </div>
-
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Filename Input */}
         <div>
           <MinimalInput
@@ -99,62 +88,54 @@ const TextUpload: React.FC<TextUploadProps> = ({
             variant="floating"
             theme="light"
           />
-          <p className="mt-1 text-sm text-secondary-300">
-            Enter a descriptive filename for your content
+          <p className="mt-1.5 text-xs text-neutral-600">
+            Give your content a descriptive name (e.g., company-guidelines.txt)
           </p>
         </div>
 
         {/* Content Textarea */}
         <div>
-          <label className="block text-sm font-medium text-secondary-200 mb-2">
-            Content *
+          <label className="block text-sm font-semibold text-neutral-900 mb-2">
+            Content <span className="text-red-500">*</span>
           </label>
           <textarea
             value={content}
             onChange={handleContentChange}
             placeholder="Paste or type your content here..."
-            rows={12}
-            className={`w-full rounded-md border border-secondary-700 bg-secondary-900 text-secondary-100 placeholder-secondary-400 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed ${
-              errors.content ? "border-error-500 focus:ring-error-500" : ""
+            rows={10}
+            className={`w-full rounded-lg border bg-white text-neutral-900 placeholder-neutral-500 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+              errors.content
+                ? "border-red-500 focus:ring-red-500"
+                : "border-neutral-300 hover:border-neutral-400"
             }`}
             disabled={loading}
             required
           />
           {errors.content && (
-            <p className="mt-1 text-sm text-error-600">{errors.content}</p>
+            <p className="mt-2 text-sm text-red-600 flex items-center space-x-1">
+              <Icons.Close className="h-4 w-4 flex-shrink-0" />
+              <span>{errors.content}</span>
+            </p>
           )}
 
           {/* Character and Word Count */}
-          <div className="mt-2 flex justify-between text-xs text-secondary-300">
-            <span>{wordCount} words</span>
-            <span>{charCount} characters</span>
+          <div className="mt-3 flex justify-between text-xs text-neutral-600 px-1">
+            <span className="font-medium">{wordCount} words</span>
+            <span className="font-medium">{charCount} characters</span>
           </div>
         </div>
 
-        {/* Upload Button */}
-        <div className="flex justify-end">
+        {/* Submit Button */}
+        <div className="flex justify-end pt-2">
           <Button
             type="submit"
             loading={loading}
-            disabled={!filename.trim() || !content.trim()}
+            disabled={!filename.trim() || !content.trim() || loading}
           >
             Upload Content
           </Button>
         </div>
       </form>
-
-      {/* Tips */}
-      <div className="bg-primary-900 border border-primary-700 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-primary-200 mb-2">
-          Tips for better results:
-        </h4>
-        <ul className="text-sm text-primary-300 space-y-1">
-          <li>• Use clear, descriptive filenames</li>
-          <li>• Include relevant context and details</li>
-          <li>• Break up very long content into separate documents</li>
-          <li>• Use proper formatting with paragraphs and sections</li>
-        </ul>
-      </div>
     </div>
   );
 };

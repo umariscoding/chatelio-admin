@@ -11,18 +11,16 @@ import {
   uploadText,
 } from "@/store/company/slices/knowledgeBaseSlice";
 import { Icons, IOSContentLoader } from "@/components/ui";
+import Button from "@/components/ui/Button";
 import DocumentList from "@/components/knowledge-base/DocumentList";
-import FileUpload from "@/components/knowledge-base/FileUpload";
-import TextUpload from "@/components/knowledge-base/TextUpload";
-
-type UploadMode = "file" | "text";
+import UploadModal from "@/components/knowledge-base/UploadModal";
 
 export default function KnowledgeBasePage() {
   const dispatch = useCompanyAppDispatch();
   const companyAuth = useCompanyAppSelector((state) => state.companyAuth);
-  const knowledgeBase = useCompanyAppSelector((state) => state.knowledgeBase);
-  const [uploadMode, setUploadMode] = useState<UploadMode>("file");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Check if page is loading
   if (companyAuth.loading) {
@@ -33,11 +31,23 @@ export default function KnowledgeBasePage() {
 
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
+    setUploadProgress(0);
     try {
+      // Simulate progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          if (prev >= 90) return prev;
+          return prev + Math.random() * 30;
+        });
+      }, 300);
+
       await dispatch(uploadFile(file)).unwrap();
-      // Keep upload section open for more uploads
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
     } catch (error) {
       console.error("Upload failed:", error);
+      setUploadProgress(0);
     } finally {
       setIsUploading(false);
     }
@@ -45,11 +55,23 @@ export default function KnowledgeBasePage() {
 
   const handleTextUpload = async (content: string, filename: string) => {
     setIsUploading(true);
+    setUploadProgress(0);
     try {
+      // Simulate progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          if (prev >= 90) return prev;
+          return prev + Math.random() * 30;
+        });
+      }, 300);
+
       await dispatch(uploadText({ content, filename })).unwrap();
-      // Keep upload section open for more uploads
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
     } catch (error) {
       console.error("Upload failed:", error);
+      setUploadProgress(0);
     } finally {
       setIsUploading(false);
     }
@@ -99,68 +121,48 @@ export default function KnowledgeBasePage() {
   return (
     <div className="min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-8">
-          <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-primary-100 mb-4">
-            <Icons.BookOpen className="h-8 w-8 text-primary-600" />
+        {/* Header Section with Upload Button */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="p-2 rounded-lg bg-primary-100">
+                <Icons.BookOpen className="h-6 w-6 text-primary-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-text-primary">
+                  Knowledge Base
+                </h1>
+                <p className="text-text-secondary">
+                  Manage your documents and content that powers your chatbot
+                </p>
+              </div>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-text-primary mb-2">
-            Knowledge Base
-          </h1>
-          <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-            Manage your documents and content that powers your chatbot's
-            responses
-          </p>
-        </div>
-
-        {/* Upload Mode Switch - Always Visible & Centered */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center space-x-2 bg-neutral-100 rounded-xl p-1 shadow-sm">
-            <button
-              onClick={() => setUploadMode("file")}
-              className={`flex items-center space-x-2 px-6 py-3 text-base font-medium rounded-lg transition-all ${
-                uploadMode === "file"
-                  ? "bg-white text-primary-600 shadow-md"
-                  : "text-neutral-600 hover:text-neutral-800 hover:bg-neutral-50"
-              }`}
-            >
-              <Icons.CloudUpload className="h-5 w-5" />
-              <span>Upload Files</span>
-            </button>
-            <button
-              onClick={() => setUploadMode("text")}
-              className={`flex items-center space-x-2 px-6 py-3 text-base font-medium rounded-lg transition-all ${
-                uploadMode === "text"
-                  ? "bg-white text-primary-600 shadow-md"
-                  : "text-neutral-600 hover:text-neutral-800 hover:bg-neutral-50"
-              }`}
-            >
-              <Icons.Document className="h-5 w-5" />
-              <span>Add Text</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Upload Interface - Always Visible */}
-        <div className="bg-bg-primary border border-border-light rounded-xl p-6 mb-8">
-          {uploadMode === "file" && (
-            <FileUpload
-              onUpload={handleFileUpload}
-              loading={isUploading}
-              multiple={false}
-              maxSize={10 * 1024 * 1024} // 10MB
-              accept=".txt,.pdf,.doc,.docx,.md"
-            />
-          )}
-
-          {uploadMode === "text" && (
-            <TextUpload onUpload={handleTextUpload} loading={isUploading} />
-          )}
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center space-x-2"
+          >
+            <Icons.Plus className="h-5 w-5" />
+            <span>Add Content</span>
+          </Button>
         </div>
 
         {/* Documents List */}
         <DocumentList />
       </div>
+
+      {/* Upload Modal */}
+      <UploadModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setUploadProgress(0);
+        }}
+        onFileUpload={handleFileUpload}
+        onTextUpload={handleTextUpload}
+        loading={isUploading}
+        uploadProgress={uploadProgress}
+      />
     </div>
   );
 }

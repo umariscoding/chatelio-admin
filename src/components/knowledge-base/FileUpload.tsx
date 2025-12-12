@@ -131,40 +131,41 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-5 ${className}`}>
       {/* Drag & Drop Area */}
       <div
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+        className={`relative border-2 border-dashed rounded-xl p-10 text-center transition-all duration-200 ${
           dragActive
-            ? "border-primary-400 bg-primary-50"
-            : "border-secondary-300 hover:border-secondary-400"
+            ? "border-primary-400 bg-primary-50 shadow-lg shadow-primary-100"
+            : "border-neutral-300 hover:border-neutral-400 hover:shadow-md"
         } ${loading ? "opacity-50 pointer-events-none" : ""}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
       >
-        <Icons.CloudUpload className="mx-auto h-12 w-12 text-secondary-400" />
-        <div className="mt-4">
-          <p className="text-lg font-medium text-secondary-100">
+        <Icons.CloudUpload className={`mx-auto h-14 w-14 transition-colors ${
+          dragActive ? "text-primary-400" : "text-neutral-400"
+        }`} />
+        <div className="mt-5">
+          <p className="text-base font-semibold text-neutral-900">
             Drop files here to upload
           </p>
-          <p className="mt-1 text-sm text-secondary-300">
+          <p className="mt-2 text-sm text-neutral-600">
             or{" "}
             <button
               type="button"
               onClick={openFileDialog}
-              className="text-primary-400 hover:text-primary-300 font-medium"
+              className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
               disabled={loading}
             >
-              browse files
+              browse your files
             </button>
           </p>
         </div>
-        <div className="mt-4 text-xs text-secondary-400">
-          <p>Supported formats: {accept}</p>
-          <p>Maximum file size: {formatFileSize(maxSize)}</p>
-          {multiple && <p>You can upload multiple files</p>}
+        <div className="mt-5 text-xs text-neutral-500 space-y-1">
+          <p>Supported formats: <span className="font-medium">{accept}</span></p>
+          <p>Maximum file size: <span className="font-medium">{formatFileSize(maxSize)}</span></p>
         </div>
       </div>
 
@@ -185,9 +186,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
           {errors.map((error, index) => (
             <div
               key={index}
-              className="p-3 bg-error-50 border border-error-200 rounded-md"
+              className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start space-x-3"
             >
-              <p className="text-sm text-error-600">{error}</p>
+              <Icons.Close className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           ))}
         </div>
@@ -195,32 +197,35 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
       {/* Selected Files */}
       {selectedFiles.length > 0 && (
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium text-secondary-100">
-            Selected Files:
-          </h4>
-          <div className="space-y-2">
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Icons.Document className="h-5 w-5 text-neutral-400" />
+            <h4 className="text-sm font-semibold text-neutral-900">
+              {selectedFiles.length} {selectedFiles.length === 1 ? "file" : "files"} selected
+            </h4>
+          </div>
+          <div className="space-y-2 max-h-48 overflow-y-auto">
             {selectedFiles.map((file, index) => (
               <div
                 key={`${file.name}-${index}`}
-                className="flex items-center justify-between p-3 bg-secondary-900 border border-secondary-700 rounded-md"
+                className="flex items-center justify-between p-4 bg-neutral-50 border border-neutral-200 rounded-lg hover:bg-neutral-100 transition-colors"
               >
-                <div className="flex items-center space-x-3">
-                  <Icons.Document className="h-5 w-5 text-secondary-400" />
-                  <div>
-                    <p className="text-sm font-medium text-secondary-100">
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  <Icons.Document className="h-5 w-5 text-neutral-400 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-neutral-900 truncate">
                       {file.name}
                     </p>
-                    <p className="text-xs text-secondary-300">
-                      {formatFileSize(file.size)} •{" "}
-                      {file.type || "Unknown type"}
+                    <p className="text-xs text-neutral-500 mt-0.5">
+                      {formatFileSize(file.size)}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => removeFile(index)}
-                  className="p-1 text-secondary-400 hover:text-secondary-200"
+                  className="p-1.5 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-200 rounded-md transition-colors flex-shrink-0 ml-2"
                   disabled={loading}
+                  aria-label="Remove file"
                 >
                   <Icons.Close className="h-4 w-4" />
                 </button>
@@ -229,14 +234,13 @@ const FileUpload: React.FC<FileUploadProps> = ({
           </div>
 
           {/* Upload Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-end pt-4 border-t border-neutral-200">
             <Button
               onClick={handleUpload}
               loading={loading}
-              disabled={selectedFiles.length === 0}
+              disabled={selectedFiles.length === 0 || loading}
             >
-              Upload {selectedFiles.length}{" "}
-              {selectedFiles.length === 1 ? "File" : "Files"}
+              Upload {selectedFiles.length} {selectedFiles.length === 1 ? "File" : "Files"}
             </Button>
           </div>
         </div>
