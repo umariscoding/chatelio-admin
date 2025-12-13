@@ -53,7 +53,6 @@ const getFileTypeIcon = (contentType: string) => {
   return <Icons.Document className="h-5 w-5 text-neutral-600" />;
 };
 
-
 const DocumentList: React.FC<DocumentListProps> = ({ className = "" }) => {
   const dispatch = useCompanyAppDispatch();
   const { documents, loading, error } = useCompanyAppSelector(
@@ -89,7 +88,10 @@ const DocumentList: React.FC<DocumentListProps> = ({ className = "" }) => {
   const totalPages = Math.ceil(filteredDocuments.length / docsPerPage);
   const indexOfLastDoc = currentPage * docsPerPage;
   const indexOfFirstDoc = indexOfLastDoc - docsPerPage;
-  const currentDocuments = filteredDocuments.slice(indexOfFirstDoc, indexOfLastDoc);
+  const currentDocuments = filteredDocuments.slice(
+    indexOfFirstDoc,
+    indexOfLastDoc,
+  );
 
   // Reset to first page when search term or docs per page changes
   useEffect(() => {
@@ -303,7 +305,8 @@ const DocumentList: React.FC<DocumentListProps> = ({ className = "" }) => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
-                      {document.content_type.split("/")[1]?.toUpperCase() || "FILE"}
+                      {document.content_type.split("/")[1]?.toUpperCase() ||
+                        "FILE"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                       {formatFileSize(document.file_size)}

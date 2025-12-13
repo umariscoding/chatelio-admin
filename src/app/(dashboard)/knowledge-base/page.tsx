@@ -42,7 +42,7 @@ export default function KnowledgeBasePage() {
       }, 300);
 
       await dispatch(uploadFile(file)).unwrap();
-      
+
       clearInterval(progressInterval);
       setUploadProgress(100);
     } catch (error) {
@@ -66,7 +66,7 @@ export default function KnowledgeBasePage() {
       }, 300);
 
       await dispatch(uploadText({ content, filename })).unwrap();
-      
+
       clearInterval(progressInterval);
       setUploadProgress(100);
     } catch (error) {

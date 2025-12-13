@@ -67,7 +67,8 @@ const UploadModal: React.FC<UploadModalProps> = ({
                   Add to Knowledge Base
                 </h2>
                 <p className="text-sm text-neutral-600 mt-1">
-                  Upload files or add text content to enhance your knowledge base
+                  Upload files or add text content to enhance your knowledge
+                  base
                 </p>
               </div>
             </div>
@@ -142,7 +143,11 @@ const UploadModal: React.FC<UploadModalProps> = ({
                   </div>
                   <div>
                     <p className="text-xl font-bold text-neutral-900">
-                      {uploadProgress < 50 ? "Reading file..." : uploadProgress < 90 ? "Processing..." : "Finalizing..."}
+                      {uploadProgress < 50
+                        ? "Reading file..."
+                        : uploadProgress < 90
+                          ? "Processing..."
+                          : "Finalizing..."}
                     </p>
                     <p className="text-base text-neutral-600 mt-2">
                       Please wait while we process your content
@@ -163,7 +168,9 @@ const UploadModal: React.FC<UploadModalProps> = ({
                       {Math.round(uploadProgress)}% complete
                     </p>
                     <p className="text-sm text-neutral-500">
-                      {uploadProgress === 100 ? "Upload complete" : "Do not close this window"}
+                      {uploadProgress === 100
+                        ? "Upload complete"
+                        : "Do not close this window"}
                     </p>
                   </div>
                 </div>

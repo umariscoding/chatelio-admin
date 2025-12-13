@@ -144,9 +144,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
         onDragOver={handleDrag}
         onDrop={handleDrop}
       >
-        <Icons.CloudUpload className={`mx-auto h-14 w-14 transition-colors ${
-          dragActive ? "text-primary-400" : "text-neutral-400"
-        }`} />
+        <Icons.CloudUpload
+          className={`mx-auto h-14 w-14 transition-colors ${
+            dragActive ? "text-primary-400" : "text-neutral-400"
+          }`}
+        />
         <div className="mt-5">
           <p className="text-base font-semibold text-neutral-900">
             Drop files here to upload
@@ -164,8 +166,13 @@ const FileUpload: React.FC<FileUploadProps> = ({
           </p>
         </div>
         <div className="mt-5 text-xs text-neutral-500 space-y-1">
-          <p>Supported formats: <span className="font-medium">{accept}</span></p>
-          <p>Maximum file size: <span className="font-medium">{formatFileSize(maxSize)}</span></p>
+          <p>
+            Supported formats: <span className="font-medium">{accept}</span>
+          </p>
+          <p>
+            Maximum file size:{" "}
+            <span className="font-medium">{formatFileSize(maxSize)}</span>
+          </p>
         </div>
       </div>
 
@@ -201,7 +208,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
           <div className="flex items-center space-x-2">
             <Icons.Document className="h-5 w-5 text-neutral-400" />
             <h4 className="text-sm font-semibold text-neutral-900">
-              {selectedFiles.length} {selectedFiles.length === 1 ? "file" : "files"} selected
+              {selectedFiles.length}{" "}
+              {selectedFiles.length === 1 ? "file" : "files"} selected
             </h4>
           </div>
           <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -240,7 +248,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
               loading={loading}
               disabled={selectedFiles.length === 0 || loading}
             >
-              Upload {selectedFiles.length} {selectedFiles.length === 1 ? "File" : "Files"}
+              Upload {selectedFiles.length}{" "}
+              {selectedFiles.length === 1 ? "File" : "Files"}
             </Button>
           </div>
         </div>

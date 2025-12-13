@@ -44,16 +44,10 @@ const getNavigationSections = (): NavigationSection[] => [
     title: "Settings",
     items: [
       {
-        name: "Company Settings",
+        name: "Settings",
         href: "/settings",
         icon: Icons.Settings,
         allowedUserTypes: ["company"],
-      },
-      {
-        name: "Profile",
-        href: "/profile",
-        icon: Icons.User,
-        allowedUserTypes: ["company", "user"],
       },
     ],
   },
